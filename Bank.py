@@ -48,9 +48,28 @@ df["Transaction_Date"] = df["Transaction_Date"].fillna(df["Transaction_Date"].mo
 #Transaction Type 
 df["Transaction_Type"] = df["Transaction_Type"].replace({"Withdrawl" : "Withdrawal", "Paymnt":"Payment"})
 
-print(df["Transaction_Amount"].head().round())
+#Transaction Amount
+df['Transaction_Amount'] = df['Transaction_Amount'].abs()
+df['Transaction_Amount']=df["Transaction_Amount"].round()
+#fill median value
+median_Value = df["Transaction_Amount"].median()
+df["Transaction_Amount"] = df["Transaction_Amount"].fillna(median_Value)
 
+# Channel 
+df["Channel"] = df["Channel"].replace({"Upi" : "UPI", "Atm" : "ATM", "Mobilebanking" : "Net Banking", "Internet Banking" : "Net Banking", "Mobile App" : "Net Banking"  })
 
+#Transaction_Status
+df["Transaction_Status"] = df["Transaction_Status"].replace({"Faild" : "Failed"})
+
+df["Transaction_Status"] = df["Transaction_Status"].fillna("Success")
+
+#KYC status 
+df["KYC_Status"] = df["KYC_Status"].replace({"Pendng" : "Pending"})
+df["KYC_Status"] = df["KYC_Status"].fillna("Verified")
+
+# Phone number
+df.loc[df["Phone"].str.len() != 10, "Phone"] = np.nan
+df["Phone"] = df["Phone"].fillna("Unknown")
 
 
 print(df.info())
