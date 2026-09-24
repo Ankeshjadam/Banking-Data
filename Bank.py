@@ -5,9 +5,13 @@ df = pd.read_excel('Banking_Dirty_Data_Analytics_Practice_10000.xlsx')
 
 # Drop duplicates of all data
 df = df.drop_duplicates()
+# df.columns = df.columns.str.strip()
 
+for col in df.select_dtypes(include=["object","str"]).columns:
+    df[col] = df[col].str.strip()
 
-text_cols = df.select_dtypes(include="object").columns
+# all string columne to remove extra columne
+text_cols = df.select_dtypes(include=["object","str"]).columns
 df[text_cols] = df[text_cols].apply(lambda col : col.str.strip().str.title() )
 
 ## age columne 
@@ -35,9 +39,16 @@ df["Annual_Income"] = df["Annual_Income"].round(2)
 
 #Account balence
 df["Account_Balance"] = df["Account_Balance"].round(2)
-print(df["Account_Balance"].head(10))
+df["Account_Balance"] = df["Account_Balance"].fillna(0)
 
+#Transaction Date
+df["Transaction_Date"] = pd.to_datetime(df["Transaction_Date"],format='mixed',dayfirst = False, errors='coerce')
+df["Transaction_Date"] = df["Transaction_Date"].fillna(df["Transaction_Date"].mode()[0])
 
+#Transaction Type 
+df["Transaction_Type"] = df["Transaction_Type"].replace({"Withdrawl" : "Withdrawal", "Paymnt":"Payment"})
+
+print(df["Transaction_Amount"].head().round())
 
 
 
