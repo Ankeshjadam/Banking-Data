@@ -6,6 +6,7 @@ df = pd.read_excel('Banking_Dirty_Data_Analytics_Practice_10000.xlsx')
 # Drop duplicates of all data
 df = df.drop_duplicates()
 
+
 text_cols = df.select_dtypes(include="object").columns
 df[text_cols] = df[text_cols].apply(lambda col : col.str.strip().str.title() )
 
@@ -27,10 +28,14 @@ df["Account_Type"] = df["Account_Type"].replace({"Curent" : "Current", "Saving" 
 df["Employment_Type"] = df["Employment_Type"].replace({"Self-Employed" : "Self Employed"})
 
 # #Annual income
-# df["Annual_Income"] = (df["Annual_Income"] <= 0).fillna(df["Annual_Income"].mean())
-# df["Annual_Income"] = df["Annual_Income"].fillna(df["Annual_Income"].mean())
+mean_Income =  round(df.loc[df["Annual_Income"] > 0,"Annual_Income"].mean(),2)
+df["Annual_Income"] = df["Annual_Income"].mask(df["Annual_Income"]<= 0, mean_Income)
+df["Annual_Income"] = df["Annual_Income"].fillna(mean_Income)
+df["Annual_Income"] = df["Annual_Income"].round(2)
 
-# print(df["Annual_Income"].head())
+#Account balence
+df["Account_Balance"] = df["Account_Balance"].round(2)
+print(df["Account_Balance"].head(10))
 
 
 
@@ -38,8 +43,3 @@ df["Employment_Type"] = df["Employment_Type"].replace({"Self-Employed" : "Self E
 
 
 print(df.info())
-
-
-
-
-
