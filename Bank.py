@@ -81,8 +81,9 @@ Branch_pattern = r'^\d+$'
 df.loc[~df["Branch_Code"].astype(str).str.upper().str.match(Branch_pattern, na=False),"Branch_Code"] = np.nan
 df["Branch_Code"] = df["Branch_Code"].fillna("Unkonwn")
 
+#IFSC code
 IFSC_pattern = r'^[A-Z]{4}0[A-Z0-9]{6}$'
 df.loc[~df["Branch_Code"].astype(str).str.upper().str.match(IFSC_pattern, na=False),"IFSC_Code"] = np.nan
 df["IFSC_Code"] = df["IFSC_Code"].fillna("Unknown")
 
-print(df.info())
+df.to_excel("Baking_Clean_Data.xlsx", index=False)
