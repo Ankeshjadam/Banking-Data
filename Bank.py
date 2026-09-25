@@ -71,5 +71,18 @@ df["KYC_Status"] = df["KYC_Status"].fillna("Verified")
 df.loc[df["Phone"].str.len() != 10, "Phone"] = np.nan
 df["Phone"] = df["Phone"].fillna("Unknown")
 
+#Email
+pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'  # Email valid pattern
+df.loc[~df["Email"].str.match(pattern, na=False),"Email"] = np.nan
+df["Email"] = df["Email"].fillna("UnknoWn")
+
+#Barnch code
+Branch_pattern = r'^\d+$'
+df.loc[~df["Branch_Code"].astype(str).str.upper().str.match(Branch_pattern, na=False),"Branch_Code"] = np.nan
+df["Branch_Code"] = df["Branch_Code"].fillna("Unkonwn")
+
+IFSC_pattern = r'^[A-Z]{4}0[A-Z0-9]{6}$'
+df.loc[~df["Branch_Code"].astype(str).str.upper().str.match(IFSC_pattern, na=False),"IFSC_Code"] = np.nan
+df["IFSC_Code"] = df["IFSC_Code"].fillna("Unknown")
 
 print(df.info())
